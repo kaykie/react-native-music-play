@@ -1,0 +1,14 @@
+{
+  "presets": ["react-native"],
+  "env": {
+    "development": {
+      "plugins": ["transform-decorators-legacy"]
+    },
+    "test": {
+      "plugins": ["transform-decorators-legacy"]
+    },
+    "production": {
+      "plugins": ["transform-decorators-legacy"]
+    }
+  }
+}
