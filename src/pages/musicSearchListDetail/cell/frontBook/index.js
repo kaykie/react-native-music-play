@@ -7,6 +7,7 @@ import {observer, inject} from 'mobx-react'
 import MusicFiles from "react-native-get-music-files";
 import TouchableButton from '../../../../components/touchableButton'
 import MusicCollectList from '../../../home/cell/musicCollectList';
+import utils from '../../../../utils/utils';
 
 @inject('store')
 @observer
@@ -17,9 +18,9 @@ class FrontBook extends Component {
       'onBatchReceived',
       (params) => {
         console.log(params.batch);
-        // if (this.props.store.songsList.length >= 20) {
-        //   DeviceEventEmitter.removeAllListeners('onBatchReceived');
-        // }
+        if (this.props.store.songsList.length >= 20) {
+          DeviceEventEmitter.removeAllListeners('onBatchReceived');
+        }
         const zhouJieLunList = params.batch.filter(item => item.author === '周杰伦')
         // const list = params.batch.map(item => {
         //   return {
@@ -46,7 +47,7 @@ class FrontBook extends Component {
   }
 
   handleGetAllMusic() {
-    // utils.requestCameraPermission();
+    utils.requestCameraPermission();
     MusicFiles.getAll({
       id: true,
       blured: false,
@@ -54,10 +55,10 @@ class FrontBook extends Component {
       duration: true, //default : true
       cover: true, //default : true,
       title: true,
-      batchNumber: 6, //get 5 songs per batch
+      batchNumber: 5, //get 5 songs per batch
       minimumSongDuration: 10000, //in miliseconds,
       fields: ['title', 'artwork', 'duration', 'artist', 'genre', 'lyrics', 'albumTitle']
-    });
+    })
   }
 
   handleOpenMusicCollect() {

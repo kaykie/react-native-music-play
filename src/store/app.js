@@ -60,6 +60,7 @@ class Store {
     this.currentIndex = 0;
     this.process = 0;
     this.isPaused = false;
+    console.log(this.currentMusic);
     this.resetCurrentMusic();
   };
 
@@ -70,7 +71,6 @@ class Store {
         return
       }
       this.currentIndex++;
-      console.log(1111);
       // if(!this.songsList[this.currentIndex]){
       //   this.currentIndex--;
       //   return

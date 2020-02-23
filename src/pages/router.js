@@ -17,7 +17,7 @@ export default StackNavigator({
   musicListDetail: {
     screen: MusicListDetail,
     navigationOptions: ({navigation}) =>{
-      return config.navigationOptions('播放音乐',true,navigation)
+      return config.navigationOptions('添加音乐到歌集',true,navigation)
     }
   },
   addMusicCollect: {
@@ -40,7 +40,6 @@ export default StackNavigator({
   },
 }, {
   initialRouteName: 'home',
-  contentComponent: <View><Text>fsdfaa</Text></View>,
   drawerWidth: 300
 });
 

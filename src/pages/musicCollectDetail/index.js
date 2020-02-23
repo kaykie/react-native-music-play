@@ -19,7 +19,8 @@ class MusicCollectDetail extends Component {
   }
 
   handleVideoProgress(process) {
-    this.props.store.process = process;
+    console.log(process);
+    this.props.store.process = process.currentTime;
   }
   handleVideoError(err) {
     console.log(err);
@@ -47,7 +48,7 @@ class MusicCollectDetail extends Component {
 
 
   render() {
-    const {isPaused,currentMusic,volume} = this.props.store;
+    const {isPaused,currentMusic = {},volume} = this.props.store;
     return (
       <ScrollView>
         {

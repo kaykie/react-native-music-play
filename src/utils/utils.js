@@ -15,7 +15,6 @@ export default {
           buttonPositive: 'OK',
         },
       );
-      console.log(granted);
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         console.log('You can use the camera');
       } else {
