@@ -9,9 +9,5 @@
 我需要一个播放器,可以播放我本地的音乐,并且给这些音乐分类,我点哪个音乐集就播放哪个音乐集.数据不需要保存到服务器上,保存本地即可.UI不需要好看,功能能正常使用就可以.
 
 ###实现效果说明
-
-![](./src/assets/WechatIMG7.jpeg)
-![](./src/assets/WechatIMG8.jpeg)
-![](./src/assets/WechatIMG9.jpeg)
-![](./src/assets/WechatIMG10.jpeg)
-![](./src/assets/WechatIMG11.jpeg)
+参考文章:
+https://www.xiaye0.com/articlejs?id=39
