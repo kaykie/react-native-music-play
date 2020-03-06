@@ -17,6 +17,8 @@ class Store {
   @observable isVisible = false; // 控制模态框展示与否
   @observable musicCollectName = ''; // 添加歌集的名称
   @observable isRefreshing = false; // 下拉刷新状态 目前未用到
+  @observable currentMusicColelct = {}; // 当前点击的音乐播放集
+  @observable isSearch = false; // 是否在搜索音乐
 
   constructor() {
     console.log('store start');
@@ -26,12 +28,12 @@ class Store {
   init = async () => {
     const musicCollectList = await AsyncStorage.getItem('musicCollectList');
     this.musicCollectList = musicCollectList ? JSON.parse(musicCollectList) :[];
-    console.log(this.musicCollectList);
   };
 
   @action
   saveSongsList(list) {
     this.songsList = [...this.songsList, ...list];
+    this.isSearch = false;
   }
 
   // 上一首播放完毕,播放下一首
@@ -64,6 +66,19 @@ class Store {
     this.resetCurrentMusic();
   };
 
+  handlePlayPrevNextMusic(type){
+    this.process = 0;
+    this.isPaused = false;
+    if(type === 'prev'){
+      this.currentIndex--;
+    }else{
+      this.currentIndex++;
+    }
+    this.currentMusic = this.songsList[this.currentIndex];
+    console.log(this.currentIndex);
+    this.resetCurrentMusic();
+  }
+
   // 如果没走进度 则说明该音乐不能播放,跳到下一首音乐
   resetCurrentMusic() {
     setTimeout(() => {
@@ -71,10 +86,10 @@ class Store {
         return
       }
       this.currentIndex++;
-      // if(!this.songsList[this.currentIndex]){
-      //   this.currentIndex--;
-      //   return
-      // }
+      if(!this.songsList[this.currentIndex]){
+        this.currentIndex--;
+        return
+      }
       this.currentMusic = this.songsList[this.currentIndex];
       Toast.show('播放失败,自动播放下一首!');
       this.resetCurrentMusic();
@@ -106,6 +121,37 @@ class Store {
     navigation.push('chooseMusicCollect',{screenKey:navigation.state.key})
   }
 
+  handleSelectedAllMusic(){
+    this.songsList = this.songsList.map(item =>{
+      return {
+        ...item,
+        isCheck:true
+      }
+    })
+  }
+
+  handleSelectedOtherMusic(){
+    this.songsList = this.songsList.map(item =>{
+      return {
+        ...item,
+        isCheck:!item.isCheck
+      }
+    })
+  }
+
+  // 音乐集里删除音乐
+  handleDelMusic(music){
+    const obj = this.musicCollectList.find(item => item.id === this.currentMusicColelct.id);
+    obj.songsList = obj.songsList.filter(item => item.id !== music.id);
+    this.songsList = obj.songsList;
+    AsyncStorage.setItem('musicCollectList', JSON.stringify(this.musicCollectList),function (error) {
+      if(error){
+        console.log(error)
+      }
+      console.log('保存成功');
+    });
+  }
+
   // 保存到某个歌集
   handleSaveToMusicCollect = async (item,navigation) => {
     try{
@@ -120,7 +166,7 @@ class Store {
         songsList.push(music)
       });
       obj.songsList = songsList;
-      await AsyncStorage.setItem('musicCollectList',JSON.stringify(this.musicCollectList));
+      AsyncStorage.setItem('musicCollectList',JSON.stringify(this.musicCollectList));
       Toast.show('保存成功');
       navigation.goBack(navigation.getParam('screenKey'));
     }catch (e) {

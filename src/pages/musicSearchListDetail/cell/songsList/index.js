@@ -15,12 +15,13 @@ import {inject, observer} from 'mobx-react';
 @inject('store')
 @observer
 class SongsList extends Component {
-  openControlPanel() {
 
+  handleDelMusic(music) {
+    this.props.store.handleDelMusic(music)
   }
 
   seletedMusic(item, index) {
-    if(this.props.fromType && this.props.fromType === 'musicSearchListDetail'){
+    if (this.props.fromType && this.props.fromType === 'musicSearchListDetail') {
       return
     }
     this.props.store.currentIndex = index;
@@ -36,7 +37,7 @@ class SongsList extends Component {
   }
 
   render(): React.ReactNode {
-    const {songsList} = this.props.store, {fromType = ''} = this.props;
+    const {songsList,currentIndex} = this.props.store, {fromType = ''} = this.props;
     return (
       <View>
         {
@@ -61,7 +62,7 @@ class SongsList extends Component {
                     </View>
                     <TouchableOpacity
                       activeOpacity={0.8}
-                      style={styles.ms_detail}
+                      style={fromType === 'musicCollectDetail' && index === currentIndex ? styles.ms_detail_active : styles.ms_detail}
                       onPress={this.seletedMusic.bind(this, item, index)}
                     >
                       <View style={styles.ms_detail_title}>
@@ -72,18 +73,22 @@ class SongsList extends Component {
                           <Text>{item.author}</Text>
                         </View>
                       </View>
-                      <TouchableNativeFeedback onPress={this.openControlPanel.bind(this)}>
-                        <View style={styles.ms_detail_icon}>
-                          <Icon
-                            type="entypo"
-                            size={12}
-                            reverse
-                            reverseColor="#fff"
-                            color="rgba(0,0,0,.1)"
-                            name="dots-three-vertical"
-                          />
-                        </View>
-                      </TouchableNativeFeedback>
+                      {
+                        fromType === 'musicCollectDetail' &&
+                        <TouchableNativeFeedback onPress={this.handleDelMusic.bind(this,item)}>
+                          <View style={styles.ms_detail_icon}>
+                            <Icon
+                              type="MaterialIcons"
+                              size={15}
+                              reverse
+                              reverseColor="#fff"
+                              color="rgba(0,0,0,.1)"
+                              name="delete"
+                            />
+                          </View>
+                        </TouchableNativeFeedback>
+                      }
+
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -120,10 +125,19 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderStyle: 'solid'
   },
+  ms_detail_active:{
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderStyle: 'solid',
+    borderColor: '#f00'
+  },
   ms_detail_title: {
     flex: 1
   },
   ms_detail_icon: {
-    justifyContent: 'center',
+    justifyContent: 'center'
   }
 });

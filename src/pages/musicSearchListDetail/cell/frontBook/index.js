@@ -6,7 +6,6 @@ import {
 import {observer, inject} from 'mobx-react'
 import MusicFiles from "react-native-get-music-files";
 import TouchableButton from '../../../../components/touchableButton'
-import MusicCollectList from '../../../home/cell/musicCollectList';
 import utils from '../../../../utils/utils';
 
 @inject('store')
@@ -47,7 +46,11 @@ class FrontBook extends Component {
   }
 
   handleGetAllMusic() {
+    if(this.props.store.isSearch){
+      return
+    }
     utils.requestCameraPermission();
+    this.props.store.isSearch = true;
     MusicFiles.getAll({
       id: true,
       blured: false,
@@ -55,7 +58,7 @@ class FrontBook extends Component {
       duration: true, //default : true
       cover: true, //default : true,
       title: true,
-      batchNumber: 5, //get 5 songs per batch
+      batchNumber: 10, //get 5 songs per batch
       minimumSongDuration: 10000, //in miliseconds,
       fields: ['title', 'artwork', 'duration', 'artist', 'genre', 'lyrics', 'albumTitle']
     })
@@ -65,9 +68,15 @@ class FrontBook extends Component {
     this.props.store.handleGetSelectedMusic(this.props.navigation);
   }
 
+  handleSelectedAllMusic(){
+    this.props.store.handleSelectedAllMusic();
+  }
+
+  handleSelectedOtherMusic(){
+    this.props.store.handleSelectedOtherMusic();
+  }
 
   render() {
-    const {isPaused} = this.props.store;
     return (
       <View style={styles.ms_frontBook}>
         <View style={styles.ms_image_warp}>
@@ -85,6 +94,18 @@ class FrontBook extends Component {
           iconName='save'
           buttonName={'保存到歌集'}
         />
+        <View style={styles.btnWarp}>
+          <TouchableButton
+            onPress={this.handleSelectedAllMusic.bind(this)}
+            iconName='vk-with-circle'
+            buttonName={'全选'}
+          />
+          <TouchableButton
+            onPress={this.handleSelectedOtherMusic.bind(this)}
+            iconName='vk'
+            buttonName={'反选'}
+          />
+        </View>
       </View>
     )
   }
@@ -111,5 +132,8 @@ const styles = StyleSheet.create({
     height: 300,
     width: '100%',
     backgroundColor: '#fff'
+  },
+  btnWarp:{
+    flexDirection:'row'
   }
 });

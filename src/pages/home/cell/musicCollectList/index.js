@@ -8,27 +8,12 @@ import {
 } from "react-native";
 import {ListItem} from "react-native-elements";
 
-// import RNAudiotransition from 'react-native-audiotransition';
-
 @inject('store')
 @observer
 class MusicCollectList extends Component {
 
-  componentDidMount() {
-    // console.log(RNAudiotransition);
-    // RNAudiotransition.initAudioTransition()
-  }
-
   onRefresh() {
     this.props.store.init()
-  }
-
-  transformToMp3(item) {
-    // return new Promise((resolve, reject) => {
-    //   RNAudiotransition.audioToStart(item.path, 'aac', (res) => {
-    //     resolve(res)
-    //   })
-    // })
   }
 
   itemClick(item) {
@@ -36,8 +21,8 @@ class MusicCollectList extends Component {
       this.props.store.handleSaveToMusicCollect(item, this.props.navigation);
       return
     }
-    console.log(this.props);
     this.props.navigation.push('musicCollectDetail');
+    this.props.store.currentMusicColelct = item;
     this.props.store.songsList = item.songsList ||
       [
         {

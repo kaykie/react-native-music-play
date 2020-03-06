@@ -3,7 +3,8 @@ import {inject, observer} from 'mobx-react';
 import {
   View,
   Text,
-  ScrollView
+  ScrollView,
+  StyleSheet
 } from 'react-native';
 import SongsList from '../musicSearchListDetail/cell/songsList';
 import TouchableButton from "../../components/touchableButton";
@@ -16,6 +17,16 @@ class MusicCollectDetail extends Component {
 
   handlePlay() {
     this.props.store.handlePlayMusic()
+  }
+
+  handlePlayPrev(){
+    this.props.store.handlePlayPrevNextMusic('prev')
+
+  }
+
+  handlePlayNext(){
+    this.props.store.handlePlayPrevNextMusic('next')
+
   }
 
   handleVideoProgress(process) {
@@ -73,11 +84,23 @@ class MusicCollectDetail extends Component {
         <View>
           <Text>歌集名称</Text>
         </View>
-        <TouchableButton
-          onPress={this.handlePlay.bind(this)}
-          iconName={!isPaused ? 'controller-paus' : 'controller-play'}
-          buttonName={!isPaused ? '暂停' : '播放'}
-        />
+        <View style={styles.btnWarp}>
+          <TouchableButton
+            onPress={this.handlePlay.bind(this)}
+            iconName={!isPaused ? 'controller-paus' : 'controller-play'}
+            buttonName={!isPaused ? '暂停' : '播放'}
+          />
+          <TouchableButton
+            onPress={this.handlePlayPrev.bind(this)}
+            iconName={ 'controller-jump-to-start'}
+            buttonName='上一首'
+          />
+          <TouchableButton
+            onPress={this.handlePlayNext.bind(this)}
+            iconName={ 'controller-next'}
+            buttonName='下一首'
+          />
+        </View>
         <SongsList fromType='musicCollectDetail'/>
       </ScrollView>
     )
@@ -86,3 +109,9 @@ class MusicCollectDetail extends Component {
 
 
 export default MusicCollectDetail
+
+const styles = StyleSheet.create({
+  btnWarp:{
+    flexDirection:'row'
+  }
+});
