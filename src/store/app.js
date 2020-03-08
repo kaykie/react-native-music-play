@@ -13,12 +13,13 @@ class Store {
   @observable uniquePlayer = {}; // 当前Player对象
   @observable isPaused = true; // 播放器是否暂停 false为播放 true为停止
   @observable volume = 0.5;
-  @observable process = 0; // 歌曲播放进度
+  @observable process = {}; // 歌曲播放进度 {seekableDuration: 334.262,playableDuration: 334.262,currentTime: 303.356}
   @observable isVisible = false; // 控制模态框展示与否
   @observable musicCollectName = ''; // 添加歌集的名称
   @observable isRefreshing = false; // 下拉刷新状态 目前未用到
   @observable currentMusicColelct = {}; // 当前点击的音乐播放集
   @observable isSearch = false; // 是否在搜索音乐
+  @observable playType = 0; // 播放方式  0 为顺序循环播放 1随机播放 2单首播放
 
   constructor() {
     console.log('store start');
@@ -39,8 +40,15 @@ class Store {
   // 上一首播放完毕,播放下一首
   @action
   handleNextMusic = () => {
-    this.currentIndex++;
-    this.currentMusic = this.songsList[this.currentIndex];
+    if(this.playType === 2){
+      // this.process = 0;
+      this.uniquePlayer.seek(0);
+      console.log(this.currentMusic);
+    }else{
+      this.handlePlayPrevNextMusic('next')
+    }
+    // this.currentIndex++;
+    // this.currentMusic = this.songsList[this.currentIndex];
   };
 
   // 点击播放按钮
@@ -66,17 +74,33 @@ class Store {
     this.resetCurrentMusic();
   };
 
+  // 处理上一首,下一首共用函数
   handlePlayPrevNextMusic(type){
-    this.process = 0;
-    this.isPaused = false;
-    if(type === 'prev'){
-      this.currentIndex--;
-    }else{
-      this.currentIndex++;
+    // 随机播放
+    if(this.playType === 1){
+      this.currentIndex = Math.floor(Math.random() * this.songsList.length);
     }
+    // 循环播放 或者 单首播放
+    if(this.playType === 0 || this.playType === 2){
+      if(type === 'prev'){
+        this.currentIndex = this.currentIndex === 0 ? 0 : this.currentIndex - 1;
+      }else{
+        this.currentIndex = this.currentIndex === this.songsList.length ? 0 :this.currentIndex + 1;
+      }
+    }
+    this.process = {};
+    this.isPaused = false;
     this.currentMusic = this.songsList[this.currentIndex];
     console.log(this.currentIndex);
     this.resetCurrentMusic();
+  }
+
+  handleChangePlayType(){
+    if(this.playType === 2){
+      this.playType = 0;
+      return
+    }
+    this.playType++;
   }
 
   // 如果没走进度 则说明该音乐不能播放,跳到下一首音乐

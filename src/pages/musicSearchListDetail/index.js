@@ -2,10 +2,8 @@ import React, {Component} from 'react';
 import {
   View,
   Text,
-  AsyncStorage,
   ScrollView,
   StyleSheet,
-  DeviceEventEmitter, PermissionsAndroid
 } from 'react-native'
 import SongsList from './cell/songsList'
 import FrontBook from './cell/frontBook'
@@ -18,7 +16,7 @@ class MusicListDetail extends Component {
 
 
   render() {
-    const {currentMusic, isPaused, volume} = this.props.store;
+    const {currentMusic, isSearch, volume} = this.props.store;
     console.log(currentMusic);
     return (
       <View style={styles.detailContainer}>
@@ -26,6 +24,13 @@ class MusicListDetail extends Component {
           <FrontBook
             navigation={this.props.navigation}
           />
+          {
+            isSearch ? <View>
+              <Text>
+                搜索中...
+              </Text>
+            </View> : <View/>
+          }
           <SongsList fromType='musicSearchListDetail'/>
         </ScrollView>
       </View>
@@ -37,8 +42,8 @@ class MusicListDetail extends Component {
 export default MusicListDetail
 
 const styles = StyleSheet.create({
-  detailContainer:{
-    flex:1
+  detailContainer: {
+    flex: 1
   },
 
 })

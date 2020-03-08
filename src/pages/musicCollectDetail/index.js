@@ -11,6 +11,21 @@ import TouchableButton from "../../components/touchableButton";
 import Video from 'react-native-video'
 import MyVideo from '../../components/myVideo';
 
+const playTypeArray = [
+  {
+    iconName:'cycle',
+    btnName:'循环播放'
+  },
+  {
+    iconName:'creative-cloud',
+    btnName:'随机播放'
+  },
+  {
+    iconName:'minus',
+    btnName:'单首播放'
+  }
+];
+
 @inject('store')
 @observer
 class MusicCollectDetail extends Component {
@@ -26,7 +41,10 @@ class MusicCollectDetail extends Component {
 
   handlePlayNext(){
     this.props.store.handlePlayPrevNextMusic('next')
+  }
 
+  handleChangePlayType(){
+    this.props.store.handleChangePlayType()
   }
 
   handleVideoProgress(process) {
@@ -59,7 +77,7 @@ class MusicCollectDetail extends Component {
 
 
   render() {
-    const {isPaused,currentMusic = {},volume} = this.props.store;
+    const {isPaused,currentMusic = {},volume,currentMusicColelct,playType} = this.props.store;
     return (
       <ScrollView>
         {
@@ -82,7 +100,7 @@ class MusicCollectDetail extends Component {
           />
         }
         <View>
-          <Text>歌集名称</Text>
+          <Text>{currentMusicColelct.name}</Text>
         </View>
         <View style={styles.btnWarp}>
           <TouchableButton
@@ -99,6 +117,11 @@ class MusicCollectDetail extends Component {
             onPress={this.handlePlayNext.bind(this)}
             iconName={ 'controller-next'}
             buttonName='下一首'
+          />
+          <TouchableButton
+            onPress={this.handleChangePlayType.bind(this)}
+            iconName={playTypeArray[playType].iconName}
+            buttonName={playTypeArray[playType].btnName}
           />
         </View>
         <SongsList fromType='musicCollectDetail'/>
